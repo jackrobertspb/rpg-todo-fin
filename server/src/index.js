@@ -107,19 +107,30 @@ export default (req, res) => {
   // Set CORS headers before handling the request
   const origin = req.headers.origin;
   
-  // Check if origin is allowed
-  const isAllowed = allowedOrigins.some(allowed => {
-    if (typeof allowed === 'string') {
-      return origin === allowed;
-    } else if (allowed instanceof RegExp) {
-      return allowed.test(origin);
-    }
-    return false;
-  });
+  // For Vercel, allow all vercel.app domains (more permissive)
+  const isVercelDomain = origin && (
+    origin.includes('.vercel.app') ||
+    origin.includes('localhost') ||
+    origin === process.env.CLIENT_URL
+  );
   
-  if (origin && isAllowed) {
+  if (origin && isVercelDomain) {
     res.setHeader('Access-Control-Allow-Origin', origin);
-  } else if (!origin) {
+  } else if (origin) {
+    // Still allow if explicitly in allowed list
+    const isAllowed = allowedOrigins.some(allowed => {
+      if (typeof allowed === 'string') {
+        return origin === allowed;
+      } else if (allowed instanceof RegExp) {
+        return allowed.test(origin);
+      }
+      return false;
+    });
+    if (isAllowed) {
+      res.setHeader('Access-Control-Allow-Origin', origin);
+    }
+  } else {
+    // No origin header (like curl or Postman)
     res.setHeader('Access-Control-Allow-Origin', '*');
   }
   
