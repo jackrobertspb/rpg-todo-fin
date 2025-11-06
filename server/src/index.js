@@ -116,7 +116,7 @@ app.get('/health', (req, res) => {
 
 // Export for Vercel serverless - must export a handler function
 export default (req, res) => {
-  // Set CORS headers before handling the request
+  // Set CORS headers FIRST, before anything else
   const origin = req.headers.origin;
   
   // For Vercel, allow all vercel.app domains (more permissive)
@@ -151,12 +151,13 @@ export default (req, res) => {
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Max-Age', '86400');
   
-  // Handle preflight OPTIONS requests immediately
+  // CRITICAL: Handle preflight OPTIONS requests IMMEDIATELY, don't pass to Express
   if (req.method === 'OPTIONS') {
+    console.log('OPTIONS request received, returning 204');
     return res.status(204).end();
   }
   
-  // Then pass to Express app
+  // Then pass to Express app for actual requests
   return app(req, res);
 };
 
