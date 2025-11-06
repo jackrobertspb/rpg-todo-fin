@@ -119,26 +119,45 @@ export default async (req, res) => {
   // Set CORS headers FIRST, before anything else
   const origin = req.headers.origin;
   
-  // For Vercel, allow all vercel.app domains (more permissive)
+  // CRITICAL: Handle preflight OPTIONS requests IMMEDIATELY, before any checks
+  if (req.method === 'OPTIONS') {
+    console.log('OPTIONS request received for:', req.url, 'from origin:', origin);
+    
+    // Always set CORS headers for OPTIONS requests
+    if (origin) {
+      // Check if it's a vercel.app domain or localhost
+      const isVercelDomain = origin.includes('.vercel.app') || origin.includes('localhost');
+      if (isVercelDomain) {
+        res.setHeader('Access-Control-Allow-Origin', origin);
+        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+        res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+        res.setHeader('Access-Control-Allow-Credentials', 'true');
+        res.setHeader('Access-Control-Max-Age', '86400');
+        return res.status(204).end();
+      }
+    }
+    
+    // Fallback: allow any origin for OPTIONS (less secure but ensures preflight works)
+    res.setHeader('Access-Control-Allow-Origin', origin || '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    return res.status(204).end();
+  }
+  
+  // For non-OPTIONS requests, set CORS headers based on origin
   const isVercelDomain = origin && (
     origin.includes('.vercel.app') ||
     origin.includes('localhost') ||
     origin === process.env.CLIENT_URL
   );
   
-  // Always set CORS headers for vercel.app domains
   if (origin && isVercelDomain) {
     res.setHeader('Access-Control-Allow-Origin', origin);
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     res.setHeader('Access-Control-Allow-Credentials', 'true');
     res.setHeader('Access-Control-Max-Age', '86400');
-    
-    // CRITICAL: Handle preflight OPTIONS requests IMMEDIATELY
-    if (req.method === 'OPTIONS') {
-      console.log('OPTIONS request received for:', req.url, 'from origin:', origin);
-      return res.status(204).end();
-    }
   } else if (origin) {
     // Still allow if explicitly in allowed list
     const isAllowed = allowedOrigins.some(allowed => {
@@ -155,10 +174,6 @@ export default async (req, res) => {
       res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
       res.setHeader('Access-Control-Allow-Credentials', 'true');
       res.setHeader('Access-Control-Max-Age', '86400');
-      
-      if (req.method === 'OPTIONS') {
-        return res.status(204).end();
-      }
     }
   }
   
