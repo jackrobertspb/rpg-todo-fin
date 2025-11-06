@@ -9,7 +9,7 @@
       /* Fallback styles that load immediately */
       body { margin: 0; font-family: sans-serif; }
       #offline-fallback {
-        display: flex; /* VISIBLE BY DEFAULT */
+        display: none; /* Hidden by default */
         position: fixed;
         inset: 0;
         background: #0f172a;
@@ -20,9 +20,8 @@
         padding: 20px;
         z-index: 9999;
       }
-      #offline-fallback.hidden { display: none; }
-      #root { display: none; } /* Hidden by default */
-      #root.visible { display: block; }
+      #offline-fallback.show { display: flex; }
+      #root { display: block; }
     </style>
     <!-- Modern RPG Fonts - only load if online -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -30,8 +29,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   </head>
   <body>
-    <!-- Offline fallback (VISIBLE BY DEFAULT, hidden when online) -->
-    <div id="offline-fallback">
+    <!-- Offline fallback (hidden by default, shown when offline) -->
+    <div id="offline-fallback" class="">
       <div style="max-width: 500px;">
         <div style="font-size: 4rem; margin-bottom: 1rem;">📡</div>
         <h1 style="font-size: 2rem; margin-bottom: 1rem;">You're Offline</h1>
