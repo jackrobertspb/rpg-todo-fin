@@ -2,6 +2,11 @@ import { supabase } from '../config/supabase.js';
 
 // Middleware to verify Supabase JWT token
 export const requireSupabaseAuth = async (req, res, next) => {
+  // Skip authentication for OPTIONS requests (CORS preflight)
+  if (req.method === 'OPTIONS') {
+    return next();
+  }
+  
   try {
     // Get authorization header
     const authHeader = req.headers.authorization;
