@@ -70,8 +70,10 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', message: 'RPG Todo API is running' });
 });
 
-// Export for Vercel serverless
-export default app;
+// Export for Vercel serverless - must export a handler function
+export default (req, res) => {
+  return app(req, res);
+};
 
 // Start server (for local development)
 if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
