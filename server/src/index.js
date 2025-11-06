@@ -17,8 +17,7 @@ const PORT = process.env.PORT || 3001;
 // Allow multiple origins for Vercel preview deployments
 const allowedOrigins = [
   process.env.CLIENT_URL || 'http://localhost:3000',
-  /^https:\/\/rpg-todo-fin-frontend-.*\.vercel\.app$/, // Allow all preview deployments
-  /^https:\/\/.*\.vercel\.app$/, // Allow any vercel.app domain (for preview deployments)
+  /^https:\/\/.*\.vercel\.app$/, // Allow any vercel.app domain (covers all preview deployments)
 ];
 
 const corsOptions = {
