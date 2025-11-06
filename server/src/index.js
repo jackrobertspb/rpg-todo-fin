@@ -115,7 +115,7 @@ app.get('/health', (req, res) => {
 });
 
 // Export for Vercel serverless - must export a handler function
-export default (req, res) => {
+export default async (req, res) => {
   // Set CORS headers FIRST, before anything else
   const origin = req.headers.origin;
   
@@ -126,8 +126,19 @@ export default (req, res) => {
     origin === process.env.CLIENT_URL
   );
   
+  // Always set CORS headers for vercel.app domains
   if (origin && isVercelDomain) {
     res.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    res.setHeader('Access-Control-Max-Age', '86400');
+    
+    // CRITICAL: Handle preflight OPTIONS requests IMMEDIATELY
+    if (req.method === 'OPTIONS') {
+      console.log('OPTIONS request received for:', req.url, 'from origin:', origin);
+      return res.status(204).end();
+    }
   } else if (origin) {
     // Still allow if explicitly in allowed list
     const isAllowed = allowedOrigins.some(allowed => {
@@ -140,21 +151,15 @@ export default (req, res) => {
     });
     if (isAllowed) {
       res.setHeader('Access-Control-Allow-Origin', origin);
+      res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+      res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+      res.setHeader('Access-Control-Allow-Credentials', 'true');
+      res.setHeader('Access-Control-Max-Age', '86400');
+      
+      if (req.method === 'OPTIONS') {
+        return res.status(204).end();
+      }
     }
-  } else {
-    // No origin header (like curl or Postman)
-    res.setHeader('Access-Control-Allow-Origin', '*');
-  }
-  
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-  res.setHeader('Access-Control-Max-Age', '86400');
-  
-  // CRITICAL: Handle preflight OPTIONS requests IMMEDIATELY, don't pass to Express
-  if (req.method === 'OPTIONS') {
-    console.log('OPTIONS request received, returning 204');
-    return res.status(204).end();
   }
   
   // Then pass to Express app for actual requests
