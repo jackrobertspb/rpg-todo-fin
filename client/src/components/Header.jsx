@@ -40,32 +40,32 @@ export default function Header() {
       ref={headerRef}
       className={cn(
       "sticky top-0 z-50 border-b",
-      "bg-white dark:bg-primary-dark",
+      "bg-primary dark:bg-primary-dark",
       "border-primary-dark dark:border-primary"
     )}>
       <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-6">
-            <Link to="/dashboard" className="text-xl font-bold text-primary dark:text-white flex items-center gap-2">
-              <SwordIcon className="w-6 h-6" color="currentColor" />
+            <Link to="/dashboard" className="text-xl font-bold text-white flex items-center gap-2">
+              <SwordIcon className="w-6 h-6" color="white" />
               TaskQuest
             </Link>
             <nav className="hidden md:flex gap-4">
               <Link
                 to="/dashboard"
-                className="text-primary dark:text-white hover:text-primary-light dark:hover:text-primary-light transition-colors"
+                className="text-white hover:text-primary-light transition-colors"
               >
                 Dashboard
               </Link>
               <Link
                 to="/history"
-                className="text-primary dark:text-white hover:text-primary-light dark:hover:text-primary-light transition-colors"
+                className="text-white hover:text-primary-light transition-colors"
               >
                 History
               </Link>
               <Link
                 to="/achievements"
-                className="text-primary dark:text-white hover:text-primary-light dark:hover:text-primary-light transition-colors"
+                className="text-white hover:text-primary-light transition-colors"
               >
                 Achievements
               </Link>
@@ -83,7 +83,7 @@ export default function Header() {
             {/* Mobile Hamburger Menu Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden text-primary dark:text-white hover:text-primary-light dark:hover:text-primary-light transition-colors p-2"
+              className="md:hidden text-white hover:text-primary-light transition-colors p-2"
               aria-label="Toggle menu"
             >
               <svg
@@ -104,8 +104,8 @@ export default function Header() {
             </button>
             {/* Desktop Profile Dropdown */}
             <div className="hidden md:block relative group">
-              <button className="text-primary dark:text-white hover:text-primary-light dark:hover:text-primary-light transition-colors flex items-center gap-2">
-                <ProfileIcon className="w-4 h-4" color="currentColor" />
+              <button className="text-white hover:text-primary-light transition-colors flex items-center gap-2">
+                <ProfileIcon className="w-4 h-4" color="white" />
                 Profile
               </button>
               <div className="absolute top-full right-0 mt-2 w-48 bg-white dark:bg-primary-dark border border-primary dark:border-primary-light rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
@@ -156,7 +156,7 @@ export default function Header() {
         <>
           {/* Backdrop */}
           <div 
-            className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-40"
+            className="md:hidden fixed inset-0 bg-transparent z-40"
             onClick={closeMobileMenu}
           />
           {/* Menu */}

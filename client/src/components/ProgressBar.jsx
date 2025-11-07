@@ -60,7 +60,7 @@ export default function ProgressBar({ currentXP, currentLevel, darkMaxLevel = fa
           ? "text-black dark:text-white" 
           : whiteText 
             ? "text-white" 
-            : "text-primary dark:text-white"
+            : "text-white"
       )}>
         <span className="font-semibold">Level {currentLevelInfo.level_number}</span>
         <span className="font-semibold">
