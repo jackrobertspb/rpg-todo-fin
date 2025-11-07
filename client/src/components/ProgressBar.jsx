@@ -56,15 +56,10 @@ export default function ProgressBar({ currentXP, currentLevel, darkMaxLevel = fa
     <div className="w-full">
       <div className={cn(
         "flex justify-between text-xs mb-1",
-        "text-white"
+        darkMaxLevel ? "text-black dark:text-white" : "text-white"
       )}>
         <span className="font-semibold">Level {currentLevelInfo.level_number}</span>
-        <span className={cn(
-          "font-semibold",
-          nextLevelInfo.level_number > currentLevelInfo.level_number 
-            ? "" 
-            : darkMaxLevel ? "!text-gray-900 dark:!text-gray-950" : ""
-        )}>
+        <span className="font-semibold">
           {nextLevelInfo.level_number > currentLevelInfo.level_number 
             ? `${Math.max(0, Math.round(currentXP - currentLevelInfo.xp_required)).toLocaleString()} / ${(nextLevelInfo.xp_required - currentLevelInfo.xp_required).toLocaleString()} XP`
             : 'Max Level'}
