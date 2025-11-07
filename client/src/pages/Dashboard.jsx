@@ -556,7 +556,11 @@ export default function Dashboard() {
             </div>
             <div className="text-center">
               <p className="text-sm opacity-90 mb-1">Achievements</p>
-              <p className="text-3xl font-bold">{Array.isArray(achievements) ? achievements.filter(a => a.earned).length : 0}/{Array.isArray(achievements) ? achievements.length : 0}</p>
+              <p className="text-3xl font-bold">
+                {Array.isArray(achievements) 
+                  ? `${achievements.filter(a => a.earned === true).length}/${achievements.length}` 
+                  : '0/0'}
+              </p>
             </div>
           </div>
         </div>
