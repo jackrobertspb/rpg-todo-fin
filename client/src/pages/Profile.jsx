@@ -338,6 +338,7 @@ export default function Profile() {
             <ProgressBar
               currentXP={user.total_xp}
               currentLevel={user.current_level}
+              darkMaxLevel={true}
             />
           </div>
           <div className="flex justify-between items-start">

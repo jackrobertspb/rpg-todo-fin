@@ -150,7 +150,7 @@ export default function Header() {
             onClick={closeMobileMenu}
           />
           {/* Menu */}
-          <div className="md:hidden fixed top-[73px] left-0 right-0 border-t border-primary-dark dark:border-primary bg-primary dark:bg-primary-dark z-50 max-h-[calc(100vh-73px)] overflow-y-auto">
+          <div className="md:hidden fixed top-[72px] left-0 right-0 bg-primary dark:bg-primary-dark z-50 max-h-[calc(100vh-72px)] overflow-y-auto">
             <div className="container mx-auto px-4 py-4 space-y-2">
             {user && (
               <div className="mb-4 pb-4 border-b border-primary-dark dark:border-primary">

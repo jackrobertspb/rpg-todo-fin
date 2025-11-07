@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { cn } from '@/lib/utils';
 
-export default function ProgressBar({ currentXP, currentLevel }) {
+export default function ProgressBar({ currentXP, currentLevel, darkMaxLevel = false }) {
   // Hardcoded levels data to avoid API call - matches database seed
   const levelsData = useMemo(() => [
     { level_number: 1, xp_required: 0 },
@@ -59,7 +59,12 @@ export default function ProgressBar({ currentXP, currentLevel }) {
         "text-white"
       )}>
         <span className="font-semibold">Level {currentLevelInfo.level_number}</span>
-        <span className="font-semibold">
+        <span className={cn(
+          "font-semibold",
+          nextLevelInfo.level_number > currentLevelInfo.level_number 
+            ? "" 
+            : darkMaxLevel ? "!text-gray-900 dark:!text-gray-950" : ""
+        )}>
           {nextLevelInfo.level_number > currentLevelInfo.level_number 
             ? `${Math.max(0, Math.round(currentXP - currentLevelInfo.xp_required)).toLocaleString()} / ${(nextLevelInfo.xp_required - currentLevelInfo.xp_required).toLocaleString()} XP`
             : 'Max Level'}
