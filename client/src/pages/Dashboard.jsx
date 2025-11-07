@@ -47,6 +47,17 @@ export default function Dashboard() {
     }
   }, [user, loading]);
 
+  const checkTutorial = useCallback(() => {
+    if (!user?.id) return;
+    const tutorialKey = `tutorialCompleted_${user.id}`;
+    const tutorialCompleted = localStorage.getItem(tutorialKey);
+    if (tutorialCompleted === 'true') {
+      setShowTutorial(false);
+    } else {
+      setShowTutorial(true);
+    }
+  }, [user?.id]);
+
   useEffect(() => {
     if (user) {
       if (process.env.NODE_ENV === 'development') {
@@ -77,17 +88,6 @@ export default function Dashboard() {
       return () => clearTimeout(timeout);
     }
   }, [loading]);
-
-  const checkTutorial = useCallback(() => {
-    if (!user?.id) return;
-    const tutorialKey = `tutorialCompleted_${user.id}`;
-    const tutorialCompleted = localStorage.getItem(tutorialKey);
-    if (tutorialCompleted === 'true') {
-      setShowTutorial(false);
-    } else {
-      setShowTutorial(true);
-    }
-  }, [user?.id]);
 
   const fetchData = useCallback(async () => {
     if (process.env.NODE_ENV === 'development') {
