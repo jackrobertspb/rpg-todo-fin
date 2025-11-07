@@ -65,7 +65,7 @@ export default function Dashboard() {
       return () => clearTimeout(timer);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user?.id]); // fetchData is stable, only re-run when user ID changes
+  }, [user?.id, checkTutorial]); // fetchData is stable, only re-run when user ID changes
 
   // Safety timeout - if loading takes more than 3 seconds, stop loading
   useEffect(() => {
@@ -78,14 +78,16 @@ export default function Dashboard() {
     }
   }, [loading]);
 
-  const checkTutorial = () => {
+  const checkTutorial = useCallback(() => {
     if (!user?.id) return;
     const tutorialKey = `tutorialCompleted_${user.id}`;
     const tutorialCompleted = localStorage.getItem(tutorialKey);
-    if (!tutorialCompleted) {
+    if (tutorialCompleted === 'true') {
+      setShowTutorial(false);
+    } else {
       setShowTutorial(true);
     }
-  };
+  }, [user?.id]);
 
   const fetchData = useCallback(async () => {
     if (process.env.NODE_ENV === 'development') {
@@ -207,6 +209,10 @@ export default function Dashboard() {
       // Show XP animation
       if (response.data.xp_earned) {
         setXpGain(response.data.xp_earned);
+        // Show success notification with XP earned
+        toast.success(`Task completed! +${response.data.xp_earned.toLocaleString()} XP`, {
+          duration: 3000,
+        });
       }
       
       // Show toast for level up
@@ -253,6 +259,11 @@ export default function Dashboard() {
       await fetchData();
       setShowTaskForm(false);
       setEditingTask(null);
+
+      // Show success notification
+      toast.success('Task created successfully!', {
+        duration: 3000,
+      });
 
       // Show achievement notifications if any earned
       if (response.data.new_achievements?.length > 0) {
@@ -474,10 +485,11 @@ export default function Dashboard() {
     )}>
       {showTutorial && (
         <Tutorial onComplete={() => {
-          setShowTutorial(false);
           if (user?.id) {
-            localStorage.setItem(`tutorialCompleted_${user.id}`, 'true');
+            const tutorialKey = `tutorialCompleted_${user.id}`;
+            localStorage.setItem(tutorialKey, 'true');
           }
+          setShowTutorial(false);
         }} />
       )}
       {xpGain && (
@@ -734,7 +746,8 @@ export default function Dashboard() {
                   variant={filterLabelIds.includes(label.id) ? "default" : "outline"}
                   className={cn(
                     "cursor-pointer transition-all hover:scale-105",
-                    filterLabelIds.includes(label.id) && "ring-2 ring-primary"
+                    filterLabelIds.includes(label.id) && "ring-2 ring-primary",
+                    "max-w-[150px] md:max-w-none"
                   )}
                   onClick={() => {
                     const newFilters = filterLabelIds.includes(label.id)
@@ -743,8 +756,8 @@ export default function Dashboard() {
                     handleFilterChange(newFilters);
                   }}
                 >
-                  <LabelIcon className="w-3 h-3" color="currentColor" />
-                  {label.name}
+                  <LabelIcon className="w-3 h-3 flex-shrink-0" color="currentColor" />
+                  <span className="truncate">{label.name}</span>
                 </Badge>
               ))}
             </div>

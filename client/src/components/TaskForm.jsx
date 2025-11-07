@@ -373,7 +373,8 @@ const TaskForm = memo(function TaskForm({ labels, onSubmit, onCancel, initialTas
                     "px-3 py-1 rounded cursor-pointer border transition-colors",
                     selectedLabels.includes(label.id)
                       ? "bg-secondary text-white border-secondary"
-                      : "bg-white dark:bg-primary-dark text-primary dark:text-white border-primary hover:border-secondary"
+                      : "bg-white dark:bg-primary-dark text-primary dark:text-white border-primary hover:border-secondary",
+                    "max-w-[150px] md:max-w-none"
                   )}
                 >
                   <input
@@ -382,7 +383,7 @@ const TaskForm = memo(function TaskForm({ labels, onSubmit, onCancel, initialTas
                     onChange={() => handleLabelToggle(label.id)}
                     className="hidden"
                   />
-                  {label.name}
+                  <span className="truncate">{label.name}</span>
                 </label>
               ))}
             </div>

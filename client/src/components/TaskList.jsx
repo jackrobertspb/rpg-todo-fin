@@ -95,9 +95,12 @@ const TaskList = memo(function TaskList({ tasks, onComplete, onEdit, onDelete, c
               {task.task_labels && task.task_labels.length > 0 && (
                 <div className="flex flex-wrap gap-2">
                   {task.task_labels.map((tl) => (
-                    <Badge key={tl.label_id} variant="default" className="flex items-center gap-1">
-                      <LabelIcon className="w-3 h-3" color="white" />
-                      {tl.labels?.name}
+                    <Badge key={tl.label_id} variant="default" className={cn(
+                      "flex items-center gap-1",
+                      "max-w-[150px] md:max-w-none"
+                    )}>
+                      <LabelIcon className="w-3 h-3 flex-shrink-0" color="white" />
+                      <span className="truncate">{tl.labels?.name}</span>
                     </Badge>
                   ))}
                 </div>

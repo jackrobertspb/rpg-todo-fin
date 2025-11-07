@@ -8,7 +8,6 @@ import Dashboard from './pages/Dashboard';
 import TaskHistory from './pages/TaskHistory';
 import Profile from './pages/Profile';
 import Achievements from './pages/Achievements';
-import TestSheet from './pages/TestSheet';
 import NotFound from './pages/NotFound';
 import Header from './components/Header';
 import { ThemeProvider } from './context/ThemeContext';
@@ -115,14 +114,6 @@ function AppRoutes() {
                 element={
                   <PrivateRoute>
                     <Achievements />
-                  </PrivateRoute>
-                }
-              />
-              <Route
-                path="/test-sheet"
-                element={
-                  <PrivateRoute>
-                    <TestSheet />
                   </PrivateRoute>
                 }
               />

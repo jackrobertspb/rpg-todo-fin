@@ -59,12 +59,6 @@ export default function Header() {
               >
                 Achievements
               </Link>
-              <Link
-                to="/test-sheet"
-                className="text-white hover:text-primary-light transition-colors"
-              >
-                🧪 Test Sheet
-              </Link>
             </nav>
           </div>
           <div className="flex items-center gap-4">
@@ -135,12 +129,6 @@ export default function Header() {
                     </>
                   )}
                 </button>
-                <Link
-                  to="/test-sheet"
-                  className="block px-4 py-3 text-primary dark:text-white hover:bg-primary-light dark:hover:bg-primary transition-colors flex items-center gap-2"
-                >
-                  🧪 Test Sheet
-                </Link>
                 <button
                   onClick={handleLogout}
                   className="w-full text-left px-4 py-3 text-primary dark:text-white hover:bg-primary-light dark:hover:bg-primary transition-colors rounded-b-lg"
@@ -155,8 +143,15 @@ export default function Header() {
       
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-primary-dark dark:border-primary bg-primary dark:bg-primary-dark">
-          <div className="container mx-auto px-4 py-4 space-y-2">
+        <>
+          {/* Backdrop */}
+          <div 
+            className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-40"
+            onClick={closeMobileMenu}
+          />
+          {/* Menu */}
+          <div className="md:hidden fixed top-[73px] left-0 right-0 border-t border-primary-dark dark:border-primary bg-primary dark:bg-primary-dark z-50 max-h-[calc(100vh-73px)] overflow-y-auto">
+            <div className="container mx-auto px-4 py-4 space-y-2">
             {user && (
               <div className="mb-4 pb-4 border-b border-primary-dark dark:border-primary">
                 <ProgressBar
@@ -195,13 +190,6 @@ export default function Header() {
               <ProfileIcon className="w-4 h-4" color="white" />
               Profile
             </Link>
-            <Link
-              to="/test-sheet"
-              onClick={closeMobileMenu}
-              className="block px-4 py-3 text-white hover:bg-primary-light dark:hover:bg-primary transition-colors rounded-lg"
-            >
-              🧪 Test Sheet
-            </Link>
             <button
               onClick={() => {
                 toggleTheme();
@@ -223,12 +211,13 @@ export default function Header() {
             </button>
             <button
               onClick={handleLogout}
-              className="w-full text-left px-4 py-3 text-white hover:bg-red-600 dark:hover:bg-red-700 transition-colors rounded-lg border-t border-primary-dark dark:border-primary mt-2 pt-2"
+              className="w-full text-left px-4 py-3 text-white hover:bg-red-600 dark:hover:bg-red-700 transition-colors rounded-lg mt-2"
             >
               Log Out
             </button>
           </div>
         </div>
+        </>
       )}
     </header>
   );

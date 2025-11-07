@@ -56,7 +56,7 @@ export default function ProgressBar({ currentXP, currentLevel }) {
     <div className="w-full">
       <div className={cn(
         "flex justify-between text-xs mb-1",
-        "text-primary dark:text-white"
+        "text-white"
       )}>
         <span className="font-semibold">Level {currentLevelInfo.level_number}</span>
         <span className="font-semibold">

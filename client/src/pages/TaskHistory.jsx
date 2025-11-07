@@ -74,9 +74,9 @@ export default function TaskHistory() {
                 )}
               >
                 <div className="flex items-start justify-between gap-4">
-                  <div className="flex-1">
+                  <div className="flex-1 min-w-0">
                     <h3 className={cn(
-                      "text-lg font-bold mb-2",
+                      "text-lg font-bold mb-2 truncate",
                       "text-primary dark:text-white"
                     )}>
                       {task.title}
@@ -102,25 +102,26 @@ export default function TaskHistory() {
                           {task.priority}
                         </p>
                       </div>
-                      <div>
+                      <div className="min-w-0">
                         <p className="text-gray-600 dark:text-gray-400">XP Earned</p>
                         <p className={cn(
-                          "font-medium text-secondary dark:text-secondary-light"
+                          "font-medium text-secondary dark:text-secondary-light truncate"
                         )}>
                           {task.xp_earned.toLocaleString()} XP
                         </p>
                       </div>
-                      <div>
+                      <div className="min-w-0">
                         <p className="text-gray-600 dark:text-gray-400">Labels</p>
                         <div className="flex flex-wrap gap-1 mt-1">
                           {task.task_labels?.map((tl) => (
                             <span
                               key={tl.label_id}
                               className={cn(
-                                "px-2 py-1 rounded text-xs",
+                                "px-2 py-1 rounded text-xs truncate max-w-[100px]",
                                 "bg-secondary dark:bg-secondary-dark",
                                 "text-white"
                               )}
+                              title={tl.labels?.name}
                             >
                               {tl.labels?.name}
                             </span>
