@@ -62,10 +62,9 @@ export default function TestSheet() {
       title: '2. Tutorial System',
       tests: [
         { id: 'tut-1', name: 'Tutorial appears', steps: 'Register new account', expected: 'Tutorial modal appears automatically' },
-        { id: 'tut-2', name: 'Tutorial navigation', steps: 'Click "Next" through steps', expected: 'Progresses through 4 steps smoothly' },
-        { id: 'tut-3', name: 'Tutorial tooltips', steps: 'Hover over form fields', expected: 'Yellow tooltips appear with instructions' },
-        { id: 'tut-4', name: 'Tutorial completion', steps: 'Click "Get Started" on step 4', expected: 'Tutorial closes, won\'t show again' },
-        { id: 'tut-5', name: 'No repeat', steps: 'Logout and login again', expected: 'Tutorial doesn\'t appear' },
+        { id: 'tut-2', name: 'Tutorial navigation', steps: 'Click "Next" through steps', expected: 'Progresses through 5 steps smoothly' },
+        { id: 'tut-3', name: 'Tutorial completion', steps: 'Click "Got it!" on final step', expected: 'Tutorial closes, won\'t show again' },
+        { id: 'tut-4', name: 'No repeat', steps: 'Logout and login again', expected: 'Tutorial doesn\'t appear' },
       ]
     },
     {

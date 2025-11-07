@@ -109,8 +109,11 @@ router.post('/register', async (req, res) => {
       return res.status(400).json({ error: 'Username, email, and password are required' });
     }
 
-    // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    // Validate email format - stricter validation
+    // Allows: alphanumeric, dots, plus, minus, underscore in local part
+    // Domain: alphanumeric, dots, hyphens
+    // TLD: at least 1 letter (allows minimal like n@m.c)
+    const emailRegex = /^[a-zA-Z0-9._+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]+$/;
     if (!emailRegex.test(email)) {
       return res.status(400).json({ error: 'Invalid email format' });
     }
@@ -202,7 +205,7 @@ router.post('/login', async (req, res) => {
       .single();
 
     if (!userProfile) {
-      return res.status(401).json({ error: 'Invalid credentials' });
+      return res.status(401).json({ error: 'Unable to sign in. Please check your information and try again.' });
     }
 
     // Sign in with Supabase Auth
@@ -212,7 +215,7 @@ router.post('/login', async (req, res) => {
     });
 
     if (authError) {
-      return res.status(401).json({ error: 'Invalid credentials' });
+      return res.status(401).json({ error: 'Unable to sign in. Please check your information and try again.' });
     }
 
     res.json({

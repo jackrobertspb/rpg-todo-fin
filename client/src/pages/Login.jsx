@@ -20,7 +20,7 @@ export default function Login() {
       await login(usernameOrEmail, password);
       navigate('/dashboard');
     } catch (err) {
-      setError(err.response?.data?.error || 'Login failed');
+      setError(err.response?.data?.error || err.message || 'Unable to sign in. Please check your information and try again.');
     } finally {
       setLoading(false);
     }

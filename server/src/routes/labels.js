@@ -40,6 +40,11 @@ router.post('/', async (req, res) => {
       return res.status(400).json({ error: 'Label name is required' });
     }
 
+    // Validate label name length
+    if (name.trim().length > 100) {
+      return res.status(400).json({ error: 'Label name must be 100 characters or less' });
+    }
+
     // Check if label already exists for this user
     const { data: existing } = await supabase
       .from('labels')
@@ -63,6 +68,10 @@ router.post('/', async (req, res) => {
       .single();
 
     if (createError) {
+      // Check if error is about label name length
+      if (createError.message && createError.message.includes('character varying(100)')) {
+        return res.status(400).json({ error: 'Label name must be 100 characters or less' });
+      }
       return res.status(500).json({ error: createError.message });
     }
 
@@ -88,6 +97,11 @@ router.put('/:id', async (req, res) => {
 
     if (!name || name.trim() === '') {
       return res.status(400).json({ error: 'Label name is required' });
+    }
+
+    // Validate label name length
+    if (name.trim().length > 100) {
+      return res.status(400).json({ error: 'Label name must be 100 characters or less' });
     }
 
     // Verify label belongs to user
@@ -126,6 +140,10 @@ router.put('/:id', async (req, res) => {
       .single();
 
     if (updateError) {
+      // Check if error is about label name length
+      if (updateError.message && updateError.message.includes('character varying(100)')) {
+        return res.status(400).json({ error: 'Label name must be 100 characters or less' });
+      }
       return res.status(500).json({ error: updateError.message });
     }
 

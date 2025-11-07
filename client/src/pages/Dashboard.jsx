@@ -333,6 +333,10 @@ export default function Dashboard() {
       toast.error('Label name cannot be empty');
       return;
     }
+    if (newLabelName.trim().length > 100) {
+      toast.error('Label name must be 100 characters or less');
+      return;
+    }
     try {
       await apiClient.post('/labels', { name: newLabelName.trim() });
       setNewLabelName('');
@@ -346,6 +350,10 @@ export default function Dashboard() {
   const handleEditLabel = async (labelId) => {
     if (!editLabelName.trim()) {
       toast.error('Label name cannot be empty');
+      return;
+    }
+    if (editLabelName.trim().length > 100) {
+      toast.error('Label name must be 100 characters or less');
       return;
     }
     try {
@@ -569,18 +577,40 @@ export default function Dashboard() {
               <h3 className="text-lg font-semibold mb-3 text-primary dark:text-white">Quick Label Manager</h3>
               
               {/* Create New Label */}
-              <div className="flex gap-2 mb-4">
-                <input
-                  type="text"
-                  placeholder="New label name..."
-                  value={newLabelName}
-                  onChange={(e) => setNewLabelName(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && handleCreateLabel()}
-                  className="flex-1 px-3 py-2 border rounded-md text-primary dark:text-white bg-white dark:bg-primary-light border-primary dark:border-secondary-light"
-                />
-                <Button onClick={handleCreateLabel} variant="default">
-                  Create
-                </Button>
+              <div className="mb-4">
+                <div className="flex items-center justify-between mb-2">
+                  <label className="text-sm font-medium text-primary dark:text-white">
+                    Create New Label
+                  </label>
+                  <span className={cn(
+                    "text-xs",
+                    newLabelName.length > 100 ? "text-red-500 dark:text-red-400" : "text-gray-500 dark:text-gray-400"
+                  )}>
+                    {newLabelName.length}/100 characters
+                  </span>
+                </div>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    placeholder="New label name..."
+                    value={newLabelName}
+                    onChange={(e) => setNewLabelName(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && handleCreateLabel()}
+                    maxLength={100}
+                    className={cn(
+                      "flex-1 px-3 py-2 border rounded-md text-primary dark:text-white bg-white dark:bg-primary-light",
+                      newLabelName.length > 100 ? "border-red-500" : "border-primary dark:border-secondary-light"
+                    )}
+                  />
+                  <Button onClick={handleCreateLabel} variant="default">
+                    Create
+                  </Button>
+                </div>
+                {newLabelName.length > 100 && (
+                  <p className="mt-1 text-xs text-red-500 dark:text-red-400">
+                    Label name must be 100 characters or less
+                  </p>
+                )}
               </div>
 
               {/* Existing Labels */}
@@ -590,14 +620,33 @@ export default function Dashboard() {
                     <div key={label.id} className="flex items-center gap-2 p-2 rounded bg-gray-50 dark:bg-primary-light">
                       {editingLabel === label.id ? (
                         <>
-                          <input
-                            type="text"
-                            value={editLabelName}
-                            onChange={(e) => setEditLabelName(e.target.value)}
-                            onKeyPress={(e) => e.key === 'Enter' && handleEditLabel(label.id)}
-                            className="flex-1 px-2 py-1 border rounded text-sm text-primary dark:text-white bg-white dark:bg-primary border-primary dark:border-secondary-light"
-                            autoFocus
-                          />
+                          <div className="flex-1">
+                            <input
+                              type="text"
+                              value={editLabelName}
+                              onChange={(e) => setEditLabelName(e.target.value)}
+                              onKeyPress={(e) => e.key === 'Enter' && handleEditLabel(label.id)}
+                              maxLength={100}
+                              className={cn(
+                                "w-full px-2 py-1 border rounded text-sm text-primary dark:text-white bg-white dark:bg-primary",
+                                editLabelName.length > 100 ? "border-red-500" : "border-primary dark:border-secondary-light"
+                              )}
+                              autoFocus
+                            />
+                            <div className="flex items-center justify-between mt-1">
+                              <span className={cn(
+                                "text-xs",
+                                editLabelName.length > 100 ? "text-red-500 dark:text-red-400" : "text-gray-500 dark:text-gray-400"
+                              )}>
+                                {editLabelName.length}/100 characters
+                              </span>
+                              {editLabelName.length > 100 && (
+                                <span className="text-xs text-red-500 dark:text-red-400">
+                                  Label name must be 100 characters or less
+                                </span>
+                              )}
+                            </div>
+                          </div>
                           <Button
                             onClick={() => handleEditLabel(label.id)}
                             variant="outline"

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
@@ -15,10 +15,16 @@ export default function Header() {
   const { user, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const handleLogout = async () => {
     await logout();
     navigate('/login');
+    setMobileMenuOpen(false);
+  };
+
+  const closeMobileMenu = () => {
+    setMobileMenuOpen(false);
   };
 
   return (
@@ -70,7 +76,30 @@ export default function Header() {
                 />
               </div>
             )}
-            <div className="relative group">
+            {/* Mobile Hamburger Menu Button */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="md:hidden text-white hover:text-primary-light transition-colors p-2"
+              aria-label="Toggle menu"
+            >
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                {mobileMenuOpen ? (
+                  <path d="M6 18L18 6M6 6l12 12" />
+                ) : (
+                  <path d="M4 6h16M4 12h16M4 18h16" />
+                )}
+              </svg>
+            </button>
+            {/* Desktop Profile Dropdown */}
+            <div className="hidden md:block relative group">
               <button className="text-white hover:text-primary-light transition-colors flex items-center gap-2">
                 <ProfileIcon className="w-4 h-4" color="white" />
                 Profile
@@ -90,39 +119,117 @@ export default function Header() {
                   <TrophyIcon className="w-4 h-4" color="currentColor" />
                   Achievements
                 </Link>
-                      <button
-                        onClick={toggleTheme}
-                        className="w-full text-left px-4 py-3 text-primary dark:text-white hover:bg-primary-light dark:hover:bg-primary transition-colors flex items-center gap-2"
-                      >
-                        {theme === 'light' ? (
-                          <>
-                            <MoonIcon className="w-4 h-4" color="currentColor" />
-                            Dark Mode
-                          </>
-                        ) : (
-                          <>
-                            <SunIcon className="w-4 h-4" color="currentColor" />
-                            Light Mode
-                          </>
-                        )}
-                      </button>
-                      <Link
-                        to="/test-sheet"
-                        className="block px-4 py-3 text-primary dark:text-white hover:bg-primary-light dark:hover:bg-primary transition-colors flex items-center gap-2"
-                      >
-                        🧪 Test Sheet
-                      </Link>
-                      <button
-                        onClick={handleLogout}
-                        className="w-full text-left px-4 py-3 text-primary dark:text-white hover:bg-primary-light dark:hover:bg-primary transition-colors rounded-b-lg"
-                      >
-                        Log Out
-                      </button>
+                <button
+                  onClick={toggleTheme}
+                  className="w-full text-left px-4 py-3 text-primary dark:text-white hover:bg-primary-light dark:hover:bg-primary transition-colors flex items-center gap-2"
+                >
+                  {theme === 'light' ? (
+                    <>
+                      <MoonIcon className="w-4 h-4" color="currentColor" />
+                      Dark Mode
+                    </>
+                  ) : (
+                    <>
+                      <SunIcon className="w-4 h-4" color="currentColor" />
+                      Light Mode
+                    </>
+                  )}
+                </button>
+                <Link
+                  to="/test-sheet"
+                  className="block px-4 py-3 text-primary dark:text-white hover:bg-primary-light dark:hover:bg-primary transition-colors flex items-center gap-2"
+                >
+                  🧪 Test Sheet
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="w-full text-left px-4 py-3 text-primary dark:text-white hover:bg-primary-light dark:hover:bg-primary transition-colors rounded-b-lg"
+                >
+                  Log Out
+                </button>
               </div>
             </div>
           </div>
         </div>
       </div>
+      
+      {/* Mobile Menu */}
+      {mobileMenuOpen && (
+        <div className="md:hidden border-t border-primary-dark dark:border-primary bg-primary dark:bg-primary-dark">
+          <div className="container mx-auto px-4 py-4 space-y-2">
+            {user && (
+              <div className="mb-4 pb-4 border-b border-primary-dark dark:border-primary">
+                <ProgressBar
+                  currentXP={user.total_xp}
+                  currentLevel={user.current_level}
+                />
+              </div>
+            )}
+            <Link
+              to="/dashboard"
+              onClick={closeMobileMenu}
+              className="block px-4 py-3 text-white hover:bg-primary-light dark:hover:bg-primary transition-colors rounded-lg flex items-center gap-2"
+            >
+              Dashboard
+            </Link>
+            <Link
+              to="/history"
+              onClick={closeMobileMenu}
+              className="block px-4 py-3 text-white hover:bg-primary-light dark:hover:bg-primary transition-colors rounded-lg flex items-center gap-2"
+            >
+              History
+            </Link>
+            <Link
+              to="/achievements"
+              onClick={closeMobileMenu}
+              className="block px-4 py-3 text-white hover:bg-primary-light dark:hover:bg-primary transition-colors rounded-lg flex items-center gap-2"
+            >
+              <TrophyIcon className="w-4 h-4" color="white" />
+              Achievements
+            </Link>
+            <Link
+              to="/profile"
+              onClick={closeMobileMenu}
+              className="block px-4 py-3 text-white hover:bg-primary-light dark:hover:bg-primary transition-colors rounded-lg flex items-center gap-2"
+            >
+              <ProfileIcon className="w-4 h-4" color="white" />
+              Profile
+            </Link>
+            <Link
+              to="/test-sheet"
+              onClick={closeMobileMenu}
+              className="block px-4 py-3 text-white hover:bg-primary-light dark:hover:bg-primary transition-colors rounded-lg"
+            >
+              🧪 Test Sheet
+            </Link>
+            <button
+              onClick={() => {
+                toggleTheme();
+                closeMobileMenu();
+              }}
+              className="w-full text-left px-4 py-3 text-white hover:bg-primary-light dark:hover:bg-primary transition-colors rounded-lg flex items-center gap-2"
+            >
+              {theme === 'light' ? (
+                <>
+                  <MoonIcon className="w-4 h-4" color="white" />
+                  Dark Mode
+                </>
+              ) : (
+                <>
+                  <SunIcon className="w-4 h-4" color="white" />
+                  Light Mode
+                </>
+              )}
+            </button>
+            <button
+              onClick={handleLogout}
+              className="w-full text-left px-4 py-3 text-white hover:bg-red-600 dark:hover:bg-red-700 transition-colors rounded-lg border-t border-primary-dark dark:border-primary mt-2 pt-2"
+            >
+              Log Out
+            </button>
+          </div>
+        </div>
+      )}
     </header>
   );
 }

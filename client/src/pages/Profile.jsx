@@ -214,7 +214,24 @@ export default function Profile() {
                 <input
                   type="text"
                   value={username}
-                  onChange={(e) => setUsername(e.target.value)}
+                  onChange={(e) => {
+                    try {
+                      setUsername(e.target.value);
+                    } catch (error) {
+                      // Silently handle extension errors
+                      console.warn('Input handler error (likely from extension):', error);
+                    }
+                  }}
+                  onFocus={(e) => {
+                    try {
+                      e.target.focus();
+                    } catch (error) {
+                      // Silently handle extension errors
+                      console.warn('Focus handler error (likely from extension):', error);
+                    }
+                  }}
+                  autoComplete="username"
+                  data-extension-ignore="true"
                   className={cn(
                     "w-full px-4 py-2 rounded border",
                     "border-primary dark:border-primary-light",
@@ -323,7 +340,7 @@ export default function Profile() {
               currentLevel={user.current_level}
             />
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="flex justify-between items-start">
             <div>
               <p className="text-sm text-gray-600 dark:text-gray-400">Current Level</p>
               <p className={cn(
@@ -333,7 +350,7 @@ export default function Profile() {
                 {user.current_level}
               </p>
             </div>
-            <div>
+            <div className="text-right">
               <p className="text-sm text-gray-600 dark:text-gray-400">Total XP</p>
               <p className={cn(
                 "text-3xl md:text-3xl text-2xl font-bold break-all",

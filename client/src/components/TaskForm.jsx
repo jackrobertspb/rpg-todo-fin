@@ -40,6 +40,12 @@ const TaskForm = memo(function TaskForm({ labels, onSubmit, onCancel, initialTas
       return;
     }
 
+    // Validate title length
+    if (title.length > 255) {
+      toast.error('Task title must be 255 characters or less');
+      return;
+    }
+
     setLoading(true);
     setSubmitted(true);
 
@@ -76,6 +82,11 @@ const TaskForm = memo(function TaskForm({ labels, onSubmit, onCancel, initialTas
       return;
     }
 
+    if (newLabelName.trim().length > 100) {
+      toast.error('Label name must be 100 characters or less');
+      return;
+    }
+
     try {
       await apiClient.post('/labels', { name: newLabelName.trim() });
       setNewLabelName('');
@@ -89,6 +100,11 @@ const TaskForm = memo(function TaskForm({ labels, onSubmit, onCancel, initialTas
   const handleUpdateLabel = async (labelId) => {
     if (!editLabelName.trim()) {
       toast.error('Label name cannot be empty');
+      return;
+    }
+
+    if (editLabelName.trim().length > 100) {
+      toast.error('Label name must be 100 characters or less');
       return;
     }
 
@@ -134,16 +150,31 @@ const TaskForm = memo(function TaskForm({ labels, onSubmit, onCancel, initialTas
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <Tooltip content="Enter a short, descriptive title for your task" position="top">
-            <Label>Title * ℹ️</Label>
-          </Tooltip>
+          <div className="flex items-center justify-between mb-2">
+            <Tooltip content="Enter a short, descriptive title for your task" position="top">
+              <Label>Title * ℹ️</Label>
+            </Tooltip>
+            <span className={cn(
+              "text-xs",
+              title.length > 255 ? "text-red-500 dark:text-red-400" : "text-gray-500 dark:text-gray-400"
+            )}>
+              {title.length}/255 characters
+            </span>
+          </div>
           <Input
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             required
+            maxLength={255}
             placeholder="e.g., Complete project report"
+            className={title.length > 255 ? "border-red-500" : ""}
           />
+          {title.length > 255 && (
+            <p className="mt-1 text-xs text-red-500 dark:text-red-400">
+              Title must be 255 characters or less
+            </p>
+          )}
         </div>
         <div>
           <Tooltip content="Add additional details about your task (optional)" position="top">
@@ -203,18 +234,27 @@ const TaskForm = memo(function TaskForm({ labels, onSubmit, onCancel, initialTas
             <div className="mb-4 p-4 bg-gray-50 dark:bg-primary-dark rounded border border-gray-300 dark:border-primary-light">
               {/* Create New Label */}
               <div className="mb-4">
-                <label className="block text-xs font-medium text-primary dark:text-white mb-1">
-                  Create New Label
-                </label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-xs font-medium text-primary dark:text-white">
+                    Create New Label
+                  </label>
+                  <span className={cn(
+                    "text-xs",
+                    newLabelName.length > 100 ? "text-red-500 dark:text-red-400" : "text-gray-500 dark:text-gray-400"
+                  )}>
+                    {newLabelName.length}/100 characters
+                  </span>
+                </div>
                 <div className="flex gap-2">
                   <input
                     type="text"
                     value={newLabelName}
                     onChange={(e) => setNewLabelName(e.target.value)}
                     placeholder="Label name"
+                    maxLength={100}
                     className={cn(
                       "flex-1 px-3 py-1 text-sm rounded border",
-                      "border-primary dark:border-primary-light",
+                      newLabelName.length > 100 ? "border-red-500" : "border-primary dark:border-primary-light",
                       "bg-white dark:bg-primary-dark",
                       "text-primary dark:text-white"
                     )}
@@ -241,18 +281,34 @@ const TaskForm = memo(function TaskForm({ labels, onSubmit, onCancel, initialTas
                       <div key={label.id} className="flex items-center gap-2">
                         {editingLabel === label.id ? (
                           <>
-                            <input
-                              type="text"
-                              value={editLabelName}
-                              onChange={(e) => setEditLabelName(e.target.value)}
-                              className={cn(
-                                "flex-1 px-2 py-1 text-sm rounded border",
-                                "border-primary dark:border-primary-light",
-                                "bg-white dark:bg-primary-dark",
-                                "text-primary dark:text-white"
-                              )}
-                              autoFocus
-                            />
+                            <div className="flex-1">
+                              <input
+                                type="text"
+                                value={editLabelName}
+                                onChange={(e) => setEditLabelName(e.target.value)}
+                                maxLength={100}
+                                className={cn(
+                                  "w-full px-2 py-1 text-sm rounded border",
+                                  editLabelName.length > 100 ? "border-red-500" : "border-primary dark:border-primary-light",
+                                  "bg-white dark:bg-primary-dark",
+                                  "text-primary dark:text-white"
+                                )}
+                                autoFocus
+                              />
+                              <div className="flex items-center justify-between mt-1">
+                                <span className={cn(
+                                  "text-xs",
+                                  editLabelName.length > 100 ? "text-red-500 dark:text-red-400" : "text-gray-500 dark:text-gray-400"
+                                )}>
+                                  {editLabelName.length}/100 characters
+                                </span>
+                                {editLabelName.length > 100 && (
+                                  <span className="text-xs text-red-500 dark:text-red-400">
+                                    Label name must be 100 characters or less
+                                  </span>
+                                )}
+                              </div>
+                            </div>
                             <button
                               type="button"
                               onClick={() => handleUpdateLabel(label.id)}

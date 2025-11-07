@@ -143,6 +143,10 @@ function App() {
           <AppRoutes />
           <Toaster
             position="top-right"
+            containerStyle={{
+              zIndex: 9999,
+              position: 'fixed',
+            }}
             toastOptions={{
               duration: 4000,
               style: {
@@ -151,6 +155,7 @@ function App() {
                 borderRadius: '8px',
                 padding: '16px',
                 fontFamily: 'Inter, sans-serif',
+                zIndex: 9999,
               },
               success: {
                 duration: 5000,

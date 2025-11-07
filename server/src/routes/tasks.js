@@ -146,6 +146,10 @@ router.post('/', async (req, res) => {
       return res.status(400).json({ error: 'Title and priority are required' });
     }
 
+    if (title.length > 255) {
+      return res.status(400).json({ error: 'Task title must be 255 characters or less' });
+    }
+
     if (!['High', 'Medium', 'Low'].includes(priority)) {
       return res.status(400).json({ error: 'Priority must be High, Medium, or Low' });
     }
@@ -165,6 +169,10 @@ router.post('/', async (req, res) => {
       .single();
 
     if (taskError) {
+      // Check if error is about title length
+      if (taskError.message && taskError.message.includes('character varying(255)')) {
+        return res.status(400).json({ error: 'Task title must be 255 characters or less' });
+      }
       return res.status(500).json({ error: taskError.message });
     }
 
@@ -364,6 +372,11 @@ router.put('/:id', async (req, res) => {
       return res.status(404).json({ error: 'Task not found' });
     }
 
+    // Validate title length if provided
+    if (title !== undefined && title.length > 255) {
+      return res.status(400).json({ error: 'Task title must be 255 characters or less' });
+    }
+
     // Update task
     const updateData = {};
     if (title !== undefined) updateData.title = title;
@@ -384,6 +397,10 @@ router.put('/:id', async (req, res) => {
       .single();
 
     if (updateError) {
+      // Check if error is about title length
+      if (updateError.message && updateError.message.includes('character varying(255)')) {
+        return res.status(400).json({ error: 'Task title must be 255 characters or less' });
+      }
       return res.status(500).json({ error: updateError.message });
     }
 

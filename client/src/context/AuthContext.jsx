@@ -115,7 +115,7 @@ export function AuthProvider({ children }) {
         .single();
       
       if (!profile) {
-        throw new Error('Invalid credentials');
+        throw new Error('Unable to sign in. Please check your information and try again.');
       }
       email = profile.email;
     }
@@ -127,7 +127,8 @@ export function AuthProvider({ children }) {
     });
 
     if (error) {
-      throw error;
+      // Use a vague but helpful error message for security
+      throw new Error('Unable to sign in. Please check your information and try again.');
     }
 
     // Fetch user profile with session
