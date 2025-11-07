@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
@@ -16,6 +16,8 @@ export default function Header() {
   const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const headerRef = useRef(null);
+  const [headerHeight, setHeaderHeight] = useState(73);
 
   const handleLogout = async () => {
     await logout();
@@ -27,8 +29,16 @@ export default function Header() {
     setMobileMenuOpen(false);
   };
 
+  useEffect(() => {
+    if (headerRef.current) {
+      setHeaderHeight(headerRef.current.offsetHeight);
+    }
+  }, []);
+
   return (
-    <header className={cn(
+    <header 
+      ref={headerRef}
+      className={cn(
       "sticky top-0 z-50 border-b",
       "bg-primary dark:bg-primary-dark",
       "border-primary-dark dark:border-primary"
@@ -150,7 +160,7 @@ export default function Header() {
             onClick={closeMobileMenu}
           />
           {/* Menu */}
-          <div className="md:hidden fixed -mt-[1px] top-[73px] left-0 right-0 bg-primary dark:bg-primary-dark z-50 max-h-[calc(100vh-73px)] overflow-y-auto rounded-b-lg">
+          <div className="md:hidden fixed left-0 right-0 bg-primary dark:bg-primary-dark z-50 overflow-y-auto rounded-b-lg" style={{ top: `${headerHeight}px`, maxHeight: `calc(100vh - ${headerHeight}px)` }}>
             <div className="container mx-auto px-4 py-4 space-y-2">
             {user && (
               <div className="mb-4 pb-4 border-b border-primary-dark dark:border-primary">
