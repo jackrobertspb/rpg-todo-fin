@@ -99,7 +99,7 @@ export default function Dashboard() {
       // Fetch all data in parallel instead of sequentially
       const [tasksRes, achievementsRes, labelsRes] = await Promise.allSettled([
         apiClient.get('/tasks', { params: { is_complete: false } }),
-        apiClient.get('/achievements/earned'),
+        apiClient.get('/achievements'),
         apiClient.get('/labels')
       ]);
 
@@ -181,8 +181,8 @@ export default function Dashboard() {
       }
       
       // Refresh achievements (tasks already updated optimistically)
-      const { data: achievementsData } = await apiClient.get('/achievements/earned');
-      setAchievements(Array.isArray(achievementsData) ? achievementsData : []);
+      const { data: achievementsData } = await apiClient.get('/achievements');
+      setAchievements(Array.isArray(achievementsData?.achievements) ? achievementsData.achievements : []);
       
       // Show achievement notifications if any earned
       if (response.data.new_achievements?.length > 0) {
@@ -789,7 +789,7 @@ export default function Dashboard() {
         </div>
 
         {/* Recent Achievements */}
-        {achievements.length > 0 && (
+        {achievements.filter(a => a.earned).length > 0 && (
           <div className={cn(
             "p-8 rounded-2xl shadow-lg",
             "bg-secondary dark:bg-secondary-dark",
@@ -797,14 +797,14 @@ export default function Dashboard() {
           )}>
             <h2 className="text-2xl font-sans font-bold mb-6">Recent Achievements</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-              {achievements.slice(0, 4).map((ua) => (
-                <div key={ua.achievements.id} className="text-center">
+              {achievements.filter(a => a.earned).slice(0, 4).map((achievement) => (
+                <div key={achievement.id} className="text-center">
                   <div className="text-3xl mb-2">🏆</div>
-                  <p className="text-sm font-medium">{ua.achievements.name}</p>
+                  <p className="text-sm font-medium">{achievement.name}</p>
                 </div>
               ))}
             </div>
-            {achievements.length > 4 && (
+            {achievements.filter(a => a.earned).length > 4 && (
               <button
                 onClick={() => navigate('/achievements')}
                 className={cn(
