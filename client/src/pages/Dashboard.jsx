@@ -272,7 +272,7 @@ export default function Dashboard() {
             `Achievement Unlocked!\n${achievement.name}\n+${achievement.xp_bonus} XP`,
             {
               duration: 6000,
-              icon: <PixelIcon name="trophy" size={24} color="#f59e0b" />,
+              icon: <TrophyIcon className="w-6 h-6" color="#f59e0b" />,
               style: {
                 background: '#06b6d4',
                 color: '#fff',
