@@ -538,6 +538,7 @@ export default function Dashboard() {
             <ProgressBar
               currentXP={user?.total_xp || 0}
               currentLevel={user?.current_level || 1}
+              whiteText={true}
             />
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
