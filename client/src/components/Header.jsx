@@ -47,13 +47,19 @@ export default function Header() {
               >
                 History
               </Link>
-                  <Link
-                    to="/achievements"
-                    className="text-white hover:text-primary-light transition-colors"
-                  >
-                    Achievements
-                  </Link>
-                </nav>
+              <Link
+                to="/achievements"
+                className="text-white hover:text-primary-light transition-colors"
+              >
+                Achievements
+              </Link>
+              <Link
+                to="/test-sheet"
+                className="text-white hover:text-primary-light transition-colors"
+              >
+                🧪 Test Sheet
+              </Link>
+            </nav>
           </div>
           <div className="flex items-center gap-4">
             {user && (

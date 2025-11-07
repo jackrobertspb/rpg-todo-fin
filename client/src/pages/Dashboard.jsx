@@ -79,8 +79,10 @@ export default function Dashboard() {
   }, [loading]);
 
   const checkTutorial = () => {
-    const tutorialCompleted = localStorage.getItem('tutorialCompleted');
-    if (!tutorialCompleted && user) {
+    if (!user?.id) return;
+    const tutorialKey = `tutorialCompleted_${user.id}`;
+    const tutorialCompleted = localStorage.getItem(tutorialKey);
+    if (!tutorialCompleted) {
       setShowTutorial(true);
     }
   };
@@ -465,7 +467,9 @@ export default function Dashboard() {
       {showTutorial && (
         <Tutorial onComplete={() => {
           setShowTutorial(false);
-          localStorage.setItem('tutorialCompleted', 'true');
+          if (user?.id) {
+            localStorage.setItem(`tutorialCompleted_${user.id}`, 'true');
+          }
         }} />
       )}
       {xpGain && (
